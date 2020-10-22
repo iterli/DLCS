@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.equipment.mapper.EquEntranceMapper">
+    <resultMap type="EquEntrance" id="EquEntranceResult">
+        <result property="enId"    column="en_id"    />
+        <result property="areaId"    column="area_id"    />
+        <result property="infoId"    column="info_id"    />
+        <result property="enName"    column="en_name"    />
+        <result property="enIp"    column="en_ip"    />
+        <result property="version"    column="version"    />
+        <result property="linestatus"    column="lineStatus"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <association property="area" column="area_id" javaType="SysArea"
+                    select = "com.ruoyi.project.system.mapper.SysAreaMapper.selectSysAreaById" />
+<!--        <association property="loginin" column="info_id" javaType="SysLogininfor"-->
+<!--                     select = "com.ruoyi.project.system.mapper.SysLogininforaMapper.selectSysLogininforById" />-->
+<!--        <association property="area" resultMap="areaResultMap" javaType="com.ruoyi.project.system.domain.SysArea" />-->
+<!--        <association property="loginin" resultMap="logininResultMap" javaType="com.ruoyi.project.monitor.domain.SysLogininfor" />-->
+    </resultMap>
+<!--    <resultMap id="areaResultMap" type="com.ruoyi.project.system.domain.SysArea">-->
+<!--         <id column="area_id" property="area.areaId" />-->
+<!--    </resultMap>-->
+<!--    <resultMap id="logininResultMap" type="com.ruoyi.project.monitor.domain.SysLogininfor">-->
+<!--        <id column="info_id" property="loginin.infoId" />-->
+<!--    </resultMap>-->
+
+    <sql id="selectEquEntranceVo">
+        select en_id, area_id, info_id, en_name, en_ip, version, lineStatus, create_by, create_time, update_by, update_time, remark from equ_entrance
+    </sql>
+
+        <select id="selectEquEntranceList" parameterType="EquEntrance" resultMap="EquEntranceResult">
+            select e.en_id, e.area_id, e.info_id,e.en_name, e.en_ip, e.version, e.lineStatus, e.create_by,
+            e.create_time,e.update_by, e.update_time, e.remark,a.area_Name from equ_entrance e
+            left join sys_area a on e.area_id = a.area_id
+            <where>
+                <if test="areaId != null and areaId != 0">
+                 and (e.area_id = #{areaId} or e.area_id in (select a.area_id from sys_area a where find_in_set (#{areaId},ancestors) ))
+                 </if>
+                <if test="enName != null  and enName != ''"> and e.en_name like concat('%', #{enName}, '%')</if>
+                <if test="enIp != null  and enIp != ''"> and e.en_ip = #{enIp}</if>
+                <if test="version != null  and version != ''"> and e.version = #{version}</if>
+                <if test="linestatus != null  and linestatus != ''"> and e.lineStatus = #{linestatus}</if>
+            </where>
+        </select>
+
+    <select id="selectEquEntranceById" parameterType="Long" resultMap="EquEntranceResult">
+        <include refid="selectEquEntranceVo"/>
+        where en_id = #{enId}
+    </select>
+
+    <insert id="insertEquEntrance" parameterType="EquEntrance" useGeneratedKeys="true" keyProperty="enId">
+        insert into equ_entrance
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="areaId != null">area_id,</if>
+            <if test="infoId != null">info_id,</if>
+            <if test="enName != null">en_name,</if>
+            <if test="enIp != null">en_ip,</if>
+            <if test="version != null">version,</if>
+            <if test="linestatus != null">lineStatus,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="areaId != null">#{areaId},</if>
+            <if test="infoId != null">#{infoId},</if>
+            <if test="enName != null">#{enName},</if>
+            <if test="enIp != null">#{enIp},</if>
+            <if test="version != null">#{version},</if>
+            <if test="linestatus != null">#{linestatus},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateEquEntrance" parameterType="EquEntrance">
+        update equ_entrance
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="areaId != null">area_id = #{areaId},</if>
+            <if test="infoId != null">info_id = #{infoId},</if>
+            <if test="enName != null">en_name = #{enName},</if>
+            <if test="enIp != null">en_ip = #{enIp},</if>
+            <if test="version != null">version = #{version},</if>
+            <if test="linestatus != null">lineStatus = #{linestatus},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where en_id = #{enId}
+    </update>
+
+    <delete id="deleteEquEntranceById" parameterType="Long">
+        delete from equ_entrance where en_id = #{enId}
+    </delete>
+
+    <delete id="deleteEquEntranceByIds" parameterType="String">
+        delete from equ_entrance where en_id in
+        <foreach item="enId" collection="array" open="(" separator="," close=")">
+            #{enId}
+        </foreach>
+    </delete>
+
+</mapper>

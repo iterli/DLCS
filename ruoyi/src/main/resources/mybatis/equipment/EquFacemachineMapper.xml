@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.equipment.mapper.EquFacemachineMapper">
+
+    <resultMap type="EquFacemachine" id="EquFacemachineResult">
+        <result property="faceId"    column="face_Id"    />
+        <result property="areaId"    column="area_id"    />
+        <result property="faceName"    column="face_Name"    />
+        <result property="faceIp"    column="face_Ip"    />
+        <result property="serial"    column="serial"    />
+        <result property="facePassword"    column="face_PassWord"    />
+        <result property="faceHeartbeataddress"    column="faceHeartbeatAddress"    />
+        <result property="enterInto"    column="enter_into"    />
+        <result property="callbackurl"    column="CallBackURL"    />
+        <result property="facePicturecount"    column="face_PictureCount"    />
+        <result property="faceFeaturecount"    column="face_FeatureCount"    />
+        <result property="linestatus"    column="lineStatus"    />
+        <result property="version"    column="version"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <association property="area" column="area_id" javaType="SysArea"
+                     select = "com.ruoyi.project.system.mapper.SysAreaMapper.selectSysAreaById" />
+    </resultMap>
+
+    <sql id="selectEquFacemachineVo">
+        select face_Id, area_id, face_Name, face_Ip, serial, face_PassWord, faceHeartbeatAddress, enter_into, CallBackURL, face_PictureCount, face_FeatureCount, lineStatus, version, create_by, create_time, update_by, update_time, remark from equ_facemachine
+    </sql>
+
+    <select id="selectEquFacemachineList" parameterType="EquFacemachine" resultMap="EquFacemachineResult">
+        select f.face_Id, f.area_id, f.face_Name, f.face_Ip, f.serial, f.face_PassWord,f.faceHeartbeatAddress,f.enter_into,
+        f.CallBackURL,f.face_PictureCount,f.face_FeatureCount, f.lineStatus, f.version, f.create_by, f.create_time, f.update_by,
+        f.update_time, f.remark,a.area_Name from equ_facemachine f left join sys_area a on f.area_id = a.area_id
+        <where>
+            <if test="areaId != null and areaId != 0">
+                and (f.area_id = #{areaId} or f.area_id in (select a.area_id from sys_area a where find_in_set (#{areaId},ancestors) ))
+            </if>
+            <if test="faceName != null  and faceName != ''"> and f.face_Name like concat('%', #{faceName}, '%')</if>
+            <if test="faceIp != null  and faceIp != ''"> and f.face_Ip = #{faceIp}</if>
+            <if test="serial != null  and serial != ''"> and f.serial = #{serial}</if>
+            <if test="facePassword != null  and facePassword != ''"> and f.face_PassWord = #{facePassword}</if>
+            <if test="faceHeartbeartAddress != null "> and f.faceHeartbeatAddress = #{faceHeartbeatAddress}</if>
+            <if test="enterInto != null "> and f.enter_into = #{enterInto}</if>
+            <if test="callbackurl != null  and callbackurl != ''"> and f.CallBackURL = #{callbackurl}</if>
+            <if test="facePicturecount != null "> and f.face_PictureCount = #{facePicturecount}</if>
+            <if test="faceFeaturecount != null "> and f.face_FeatureCount = #{faceFeaturecount}</if>
+            <if test="linestatus != null  and linestatus != ''"> and f.lineStatus = #{linestatus}</if>
+            <if test="version != null  and version != ''"> and f.version = #{version}</if>
+        </where>
+    </select>
+
+    <select id="selectEquFacemachineById" parameterType="Long" resultMap="EquFacemachineResult">
+        <include refid="selectEquFacemachineVo"/>
+        where face_Id = #{faceId}
+    </select>
+
+    <insert id="insertEquFacemachine" parameterType="EquFacemachine" useGeneratedKeys="true" keyProperty="faceId">
+        insert into equ_facemachine
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="areaId != null">area_id,</if>
+            <if test="faceName != null">face_Name,</if>
+            <if test="faceIp != null">face_Ip,</if>
+            <if test="serial != null">serial,</if>
+            <if test="facePassword != null">face_PassWord,</if>
+            <if test="faceHeartbeatAddress != null">faceHeartbeatAddress,</if>
+            <if test="enterInto != null">enter_into,</if>
+            <if test="callbackurl != null">CallBackURL,</if>
+            <if test="facePicturecount != null">face_PictureCount,</if>
+            <if test="faceFeaturecount != null">face_FeatureCount,</if>
+            <if test="linestatus != null">lineStatus,</if>
+            <if test="version != null">version,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="areaId != null">#{areaId},</if>
+            <if test="faceName != null">#{faceName},</if>
+            <if test="faceIp != null">#{faceIp},</if>
+            <if test="serial != null">#{serial},</if>
+            <if test="facePassword != null">#{facePassword},</if>
+            <if test="faceHeartbeatAddress != null">#{faceHeartbeatAddress},</if>
+            <if test="enterInto != null">#{enterInto},</if>
+            <if test="callbackurl != null">#{callbackurl},</if>
+            <if test="facePicturecount != null">#{facePicturecount},</if>
+            <if test="faceFeaturecount != null">#{faceFeaturecount},</if>
+            <if test="linestatus != null">#{linestatus},</if>
+            <if test="version != null">#{version},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateEquFacemachine" parameterType="EquFacemachine">
+        update equ_facemachine
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="areaId != null">area_id = #{areaId},</if>
+            <if test="faceName != null">face_Name = #{faceName},</if>
+            <if test="faceIp != null">face_Ip = #{faceIp},</if>
+            <if test="serial != null">serial = #{serial},</if>
+            <if test="facePassword != null">face_PassWord = #{facePassword},</if>
+            <if test="faceHeartbeatAddress != null">faceHeartbeatAddress = #{faceHeartbeatAddress},</if>
+            <if test="enterInto != null">enter_into = #{enterInto},</if>
+            <if test="callbackurl != null">CallBackURL = #{callbackurl},</if>
+            <if test="facePicturecount != null">face_PictureCount = #{facePicturecount},</if>
+            <if test="faceFeaturecount != null">face_FeatureCount = #{faceFeaturecount},</if>
+            <if test="linestatus != null">lineStatus = #{linestatus},</if>
+            <if test="version != null">version = #{version},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where face_Id = #{faceId}
+    </update>
+
+    <delete id="deleteEquFacemachineById" parameterType="Long">
+        delete from equ_facemachine where face_Id = #{faceId}
+    </delete>
+
+    <delete id="deleteEquFacemachineByIds" parameterType="String">
+        delete from equ_facemachine where face_Id in
+        <foreach item="faceId" collection="array" open="(" separator="," close=")">
+            #{faceId}
+        </foreach>
+    </delete>
+
+</mapper>
